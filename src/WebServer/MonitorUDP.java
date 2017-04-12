@@ -1,7 +1,4 @@
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.ObjectOutputStream;
-import java.net.*;
+package WebServer;
 
 public class MonitorUDP extends Thread{
     String hostName;
@@ -17,5 +14,6 @@ public class MonitorUDP extends Thread{
     @Override
     public void run() {
         new DispAnnouncer(hostName).start();
+        new ProbeReplier().start();
     }
 }

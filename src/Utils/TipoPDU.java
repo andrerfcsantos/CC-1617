@@ -1,3 +1,5 @@
+package Utils;
+
 import java.io.Serializable;
 
 public enum TipoPDU implements Serializable{
