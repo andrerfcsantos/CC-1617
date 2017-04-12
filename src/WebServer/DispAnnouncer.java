@@ -46,6 +46,7 @@ public class DispAnnouncer extends Thread {
                 b_array = b_out.toByteArray();
                 pacote = new DatagramPacket(b_array, b_array.length, hostAdress, 5555);
                 socket.send(pacote);
+                System.out.println("[DispAnnoucer] Pacote enviado:" + pdu.toString());
                 Thread.sleep(3000);
             } catch (IOException e) {
                 System.err.println("[DispAnnoucer] Erro ao abrir ObjectOutputStream");

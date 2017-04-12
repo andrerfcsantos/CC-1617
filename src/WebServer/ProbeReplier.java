@@ -13,7 +13,7 @@ public class ProbeReplier extends Thread {
         try {
             socket = new DatagramSocket(5555);
         } catch (SocketException e) {
-            System.err.println("[ProbeReplier] Erro ao abrir socket de monitorização.");
+            System.err.println("[ProbeReplier] Erro ao abrir socket para respostas de probe.");
         }
 
     }

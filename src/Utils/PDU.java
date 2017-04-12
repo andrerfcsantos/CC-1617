@@ -3,9 +3,6 @@ package Utils;
 import java.io.Serializable;
 import java.time.Instant;
 
-/**
- * Created by Andre on 27-03-2017.
- */
 public class PDU implements Serializable{
     private int seq;
     private TipoPDU tipo;
@@ -53,5 +50,13 @@ public class PDU implements Serializable{
         this.instant = instant;
     }
 
-
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder("PDU{");
+        sb.append("seq=").append(seq);
+        sb.append(", tipo=").append(tipo.name());
+        sb.append(", instant=").append(instant);
+        sb.append('}');
+        return sb.toString();
+    }
 }
