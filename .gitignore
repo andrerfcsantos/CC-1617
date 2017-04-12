@@ -7,6 +7,9 @@
 *.war
 *.ear
 *.iml
+*.xml
+
+manifest.mf
 
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 **/hs_err_pid*
@@ -37,9 +40,13 @@
 **/crashlytics-build.properties
 **/fabric.properties
 
+
+**/nbproject/
 **/nbproject/private/
 **/build/
 **/nbbuild/
 **/dist/
 **/nbdist/
 **/.nb-gradle/
+
+
