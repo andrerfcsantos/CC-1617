@@ -37,7 +37,10 @@ public class RTTMonitor {
             res = res.plus(durations[i]);
         }
 
-        res = res.dividedBy(validEntries);
+        if(validEntries!=0){
+            res = res.dividedBy(validEntries);
+        }
+        
         return res;
     }
 
