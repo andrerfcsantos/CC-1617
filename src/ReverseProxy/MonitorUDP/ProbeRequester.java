@@ -19,16 +19,12 @@ public class ProbeRequester extends Thread {
     private int nSeq;
     private ReentrantLock lockTabela;
 
-    public ProbeRequester(InetAddress hostAdd, MonitorTableEntry entradaTabela, ReentrantLock lockTabela){
-        try {
+    public ProbeRequester(InetAddress hostAdd, MonitorTableEntry entradaTabela, ReentrantLock lockTabela, DatagramSocket socket){
             this.entradaTabela = entradaTabela;
             this.nSeq=0;
             this.hostAddress = hostAdd;
             this.lockTabela = lockTabela;
-            socket = new DatagramSocket(5555);
-        } catch (SocketException e) {
-            System.err.println("[ProbeRequester] Erro ao abrir socket para respostas de probe.");
-        }
+            this.socket = socket;
     }
 
     @Override

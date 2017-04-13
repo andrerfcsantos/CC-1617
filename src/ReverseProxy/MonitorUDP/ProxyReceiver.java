@@ -58,7 +58,7 @@ public class ProxyReceiver extends Thread{
                                 entradaTabela = new MonitorTableEntry();
                                 tabelaMonitorizacao.addEntry(endereco_origem, entradaTabela);
                                 entradaTabela.setLastAvailable(pdu_pedido.getTimeSent());
-                                new ProbeRequester(endereco_origem, entradaTabela, lockTabela).start();
+                                new ProbeRequester(endereco_origem, entradaTabela, lockTabela, socket).start();
                             }
                         } finally{
                             lockTabela.unlock();
