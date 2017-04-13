@@ -70,15 +70,15 @@ public class ProxyReceiver extends Thread{
                         lockTabela.lock();
                         try{
                             MonitorTableEntry entry = tabelaMonitorizacao.getEntry(endereco_origem);
+                            entry.setLastSeqReceived(pdu_pedido.getSeq());
+                            entry.setLastAvailable(pdu_pedido.getTimeSent());
                             if(entry.getLastSeqReceived()==entry.getLastSeqSent()){
                                 rtt=Duration.between(entry.getTimeLastSeqSent(), Instant.now());
                                 entry.addRTTEntry(rtt);
                             }
-                            entry.setLastSeqReceived(pdu_pedido.getSeq());
-                            entry.setLastAvailable(pdu_pedido.getTimeSent());
                             averageRTT = entry.getAverageRTT();
                             System.out.println("[ProxyReceiver] RTT médio: " + averageRTT.toMillis() + " (ms) " +
-                                                "com base em " + entry.getNEntriesRTT() + "pacotes.");
+                                                "com base em " + entry.getNEntriesRTT() + " pacotes.");
                         } finally {
                             lockTabela.unlock();
                         }
