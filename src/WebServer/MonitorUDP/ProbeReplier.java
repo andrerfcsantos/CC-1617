@@ -1,13 +1,13 @@
-package WebServer;
+package WebServer.MonitorUDP;
 
 import java.io.*;
 import java.net.*;
 import Utils.*;
+import WebServer.WebServer;
 
 public class ProbeReplier extends Thread {
 
     private DatagramSocket socket;
-
 
     public ProbeReplier() {
         try {

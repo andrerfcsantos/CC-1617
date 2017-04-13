@@ -1,6 +1,7 @@
-package WebServer;
+package WebServer.MonitorUDP;
 
 import Utils.*;
+import WebServer.WebServer;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -9,7 +10,7 @@ import java.net.*;
 
 public class DispAnnouncer extends Thread {
     private DatagramSocket socket;
-    private InetAddress hostAdress;
+    private InetAddress hostAddress;
 
 
     public DispAnnouncer() {
@@ -18,7 +19,7 @@ public class DispAnnouncer extends Thread {
 
     public DispAnnouncer(String hostName) {
         try {
-            hostAdress = InetAddress.getByName(hostName);
+            hostAddress = InetAddress.getByName(hostName);
             socket = new DatagramSocket(5555);
         } catch (SocketException e) {
             System.err.println("[DispAnnoucer] Erro ao abrir socket de monitorização.");
@@ -44,7 +45,7 @@ public class DispAnnouncer extends Thread {
                 o_out.writeObject(pdu);
                 o_out.flush();
                 b_array = b_out.toByteArray();
-                pacote = new DatagramPacket(b_array, b_array.length, hostAdress, 5555);
+                pacote = new DatagramPacket(b_array, b_array.length, hostAddress, 5555);
                 socket.send(pacote);
                 System.out.println("[DispAnnoucer] Pacote enviado:" + pdu.toString());
                 Thread.sleep(3000);

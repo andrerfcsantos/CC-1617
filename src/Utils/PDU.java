@@ -6,24 +6,24 @@ import java.time.Instant;
 public class PDU implements Serializable{
     private int seq;
     private TipoPDU tipo;
-    private Instant instant;
+    private Instant timeSent;
 
     public PDU(){
         seq=0;
         tipo = TipoPDU.DISPONIVEL;
-        instant = Instant.now();
+        timeSent = Instant.now();
     }
 
     public PDU(int s, TipoPDU t){
         seq=s;
         tipo=t;
-        instant = Instant.now();
+        timeSent = Instant.now();
     }
 
     public PDU(int s, TipoPDU t, Instant inst){
         seq=s;
         tipo=t;
-        instant = inst;
+        timeSent = inst;
     }
 
     public int getSeq() {
@@ -42,12 +42,12 @@ public class PDU implements Serializable{
         this.tipo = tipo;
     }
 
-    public Instant getInstant() {
-        return instant;
+    public Instant getTimeSent() {
+        return timeSent;
     }
 
-    public void setInstant(Instant instant) {
-        this.instant = instant;
+    public void setTimeSent(Instant timeSent) {
+        this.timeSent = timeSent;
     }
 
     @Override
@@ -55,7 +55,7 @@ public class PDU implements Serializable{
         final StringBuilder sb = new StringBuilder("PDU{");
         sb.append("seq=").append(seq);
         sb.append(", tipo=").append(tipo.name());
-        sb.append(", instant=").append(instant);
+        sb.append(", timeSent=").append(timeSent);
         sb.append('}');
         return sb.toString();
     }
