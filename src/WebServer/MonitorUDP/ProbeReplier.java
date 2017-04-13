@@ -9,13 +9,8 @@ public class ProbeReplier extends Thread {
 
     private DatagramSocket socket;
 
-    public ProbeReplier() {
-        try {
-            socket = new DatagramSocket(5555);
-        } catch (SocketException e) {
-            System.err.println("[ProbeReplier] Erro ao abrir socket para respostas de probe.");
-        }
-
+    public ProbeReplier(DatagramSocket socket) {
+        this.socket = socket;
     }
 
     @Override

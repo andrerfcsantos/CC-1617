@@ -18,14 +18,10 @@ public class ProxyReceiver extends Thread{
     private ReentrantLock lockTabela;
 
 
-    public ProxyReceiver(MonitorTable tabela,ReentrantLock lockTabela){
+    public ProxyReceiver(MonitorTable tabela,ReentrantLock lockTabela,DatagramSocket socket){
         this.tabelaMonitorizacao = tabela;
         this.lockTabela = lockTabela;
-        try {
-            socket = new DatagramSocket(5555);
-        } catch (SocketException e) {
-            System.err.println("[ProxyReceiver] Erro ao abrir socket de monitorização.");
-        }
+        this.socket = socket;
     }
 
     @Override

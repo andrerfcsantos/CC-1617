@@ -1,7 +1,11 @@
 package WebServer.MonitorUDP;
 
+import java.net.DatagramSocket;
+import java.net.SocketException;
+
 public class MonitorUDPServer extends Thread{
-    String hostName;
+    private String hostName;
+    private DatagramSocket socketUDP;
 
     public MonitorUDPServer(){
         this.hostName = "localhost";
@@ -13,11 +17,20 @@ public class MonitorUDPServer extends Thread{
 
     @Override
     public void run() {
-        System.out.println("[MonitorUDPServer] A iniciar DispAnnouncer...");
-        new DispAnnouncer(hostName).start();
-        System.out.println("[MonitorUDPServer] DispAnnouncer iniciado.");
-        System.out.println("[MonitorUDPServer] A iniciar ProbeReplier...");
-        new ProbeReplier().start();
-        System.out.println("[MonitorUDPServer] ProbeReplier iniciado.");
+        try {
+            socketUDP = new DatagramSocket(5555);
+
+            System.out.println("[MonitorUDPServer] A iniciar DispAnnouncer...");
+            new DispAnnouncer(hostName,socketUDP).start();
+            System.out.println("[MonitorUDPServer] DispAnnouncer iniciado.");
+            System.out.println("[MonitorUDPServer] A iniciar ProbeReplier...");
+
+            new ProbeReplier(socketUDP).start();
+            System.out.println("[MonitorUDPServer] ProbeReplier iniciado.");
+        } catch (SocketException e) {
+            System.err.println("[MonitorUDPServer] Erro ao abrir socket UDP.");
+        }
+
+
     }
 }

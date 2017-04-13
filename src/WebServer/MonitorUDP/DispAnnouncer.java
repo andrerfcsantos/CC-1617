@@ -12,17 +12,10 @@ public class DispAnnouncer extends Thread {
     private DatagramSocket socket;
     private InetAddress hostAddress;
 
-
-    public DispAnnouncer() {
-        this("localhost");
-    }
-
-    public DispAnnouncer(String hostName) {
+    public DispAnnouncer(String hostName,DatagramSocket socket) {
         try {
-            hostAddress = InetAddress.getByName(hostName);
-            socket = new DatagramSocket(5555);
-        } catch (SocketException e) {
-            System.err.println("[DispAnnoucer] Erro ao abrir socket de monitorização.");
+            this.hostAddress = InetAddress.getByName(hostName);
+            this.socket = socket;
         } catch (UnknownHostException e) {
             System.err.println("[DispAnnoucer] Host não reconhecido.");
         }
