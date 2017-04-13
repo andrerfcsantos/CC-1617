@@ -38,7 +38,7 @@ public class ProbeRequester extends Thread {
         while (true) {
 
             try {
-                pdu_pedido = new PDU(nSeq, TipoPDU.PROB_REPLY);
+                pdu_pedido = new PDU(nSeq, TipoPDU.PROB_REQUEST);
 
                 b_out = new ByteArrayOutputStream();
                 o_out = new ObjectOutputStream(b_out);
@@ -60,7 +60,7 @@ public class ProbeRequester extends Thread {
                 }
                 System.out.println("[ProbeRequester] Pedido enviado: " + pdu_pedido.toString());
                 nSeq++;
-                Thread.sleep(3000);
+                Thread.sleep(5000);
 
                 lockTabela.lock();
                 try{

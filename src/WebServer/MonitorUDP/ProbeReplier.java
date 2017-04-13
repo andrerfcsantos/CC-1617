@@ -34,6 +34,8 @@ public class ProbeReplier extends Thread {
                 o_in = new ObjectInputStream(b_in);
                 pdu_pedido = (PDU) o_in.readObject();
 
+                System.err.println("[ProbeReplier] Pedido recebido: " + pdu_pedido.toString());
+
                 pdu_resposta = new PDU(pdu_pedido.getSeq(),TipoPDU.PROB_REPLY);
 
                 b_out = new ByteArrayOutputStream();
@@ -45,6 +47,7 @@ public class ProbeReplier extends Thread {
                 b_array = b_out.toByteArray();
                 pacote_out = new DatagramPacket(b_array, b_array.length, pacote_in.getAddress(), 5555);
                 socket.send(pacote_out);
+                System.err.println("[ProbeReplier] Resposta enviada: " + pdu_resposta.toString());
 
             } catch (IOException e) {
                 System.err.println("[ProbeReplier] Erro ao abrir ObjectInputStream");

@@ -40,7 +40,7 @@ public class RTTMonitor {
         if(validEntries!=0){
             res = res.dividedBy(validEntries);
         }
-        
+
         return res;
     }
 
