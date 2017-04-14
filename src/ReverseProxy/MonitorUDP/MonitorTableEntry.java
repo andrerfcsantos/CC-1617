@@ -90,4 +90,12 @@ public class MonitorTableEntry {
         return pkgLossMonitor.getPkgLoss();
     }
 
+    public PkgLossInfo getPackagesLost(int nLastEntries) {
+        return pkgLossMonitor.getPkgLoss(nLastEntries,PkgStatus.LOST);
+    }
+
+    public int getTotalPackages() {
+        return pkgLossMonitor.getTotalPackages();
+    }
+
 }

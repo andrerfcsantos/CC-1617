@@ -44,7 +44,7 @@ public class ProxyReceiver extends Thread{
                 b_in = new ByteArrayInputStream(buf_in,0,pacote_in.getLength());
                 o_in = new ObjectInputStream(b_in);
                 pdu_pedido = (PDU) o_in.readObject();
-                System.out.println("[ProxyReceiver] Pedido recebido:" + pdu_pedido.toString());
+                System.out.println("[ProxyReceiver] Pedido recebido: " + pdu_pedido.toString());
 
                 switch (pdu_pedido.getTipo()){
                     case DISPONIVEL:
@@ -54,11 +54,11 @@ public class ProxyReceiver extends Thread{
                             if(tabelaMonitorizacao.ipExists(endereco_origem)){
                                 tabelaMonitorizacao.setLastAvailable(endereco_origem, pdu_pedido.getTimeSent());
                             }else{
-                                System.out.println("[ProxyReceiver] Registo de novo servidor em:" + endereco_origem.toString());
+                                System.out.println("[ProxyReceiver] Registo de novo servidor em " + endereco_origem.toString());
                                 entradaTabela = new MonitorTableEntry();
                                 tabelaMonitorizacao.addEntry(endereco_origem, entradaTabela);
                                 entradaTabela.setLastAvailable(pdu_pedido.getTimeSent());
-                                new ProbeRequester(endereco_origem, entradaTabela, lockTabela, socket).start();
+                                new ProbeRequester(endereco_origem, tabelaMonitorizacao, entradaTabela, lockTabela, socket).start();
                             }
                         } finally{
                             lockTabela.unlock();
@@ -77,7 +77,7 @@ public class ProxyReceiver extends Thread{
                                 entry.addRTTEntry(rtt);
                             }
                             averageRTT = entry.getAverageRTT();
-                            System.out.println("[ProxyReceiver] RTT médio: " + averageRTT.toMillis() + " (ms) " +
+                            System.out.println("[ProxyReceiver] RTT médio: " + averageRTT.toMillis() + " ms " +
                                                 "com base em " + entry.getNEntriesRTT() + " pacotes.");
                         } finally {
                             lockTabela.unlock();

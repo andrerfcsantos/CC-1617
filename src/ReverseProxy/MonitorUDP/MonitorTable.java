@@ -30,6 +30,9 @@ public class MonitorTable {
         return tabela.get(ip);
     }
 
+    public void deleteEntry(InetAddress ip){
+        tabela.remove(ip);
+    }
 
 
 }
