@@ -8,7 +8,6 @@ import java.io.*;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
-import java.net.SocketException;
 import java.util.concurrent.locks.ReentrantLock;
 
 public class ProbeRequester extends Thread {
@@ -33,6 +32,8 @@ public class ProbeRequester extends Thread {
         ObjectOutputStream o_out;
         DatagramPacket pacote_out;
         PDU pdu_pedido;
+        PkgLossInfo pkgLossInfo;
+        float percPkglost;
         byte b_array[];
 
         while (true) {
@@ -54,7 +55,6 @@ public class ProbeRequester extends Thread {
                 try{
                     entradaTabela.setTimeLastSeqSent(pdu_pedido.getTimeSent());
                     entradaTabela.setLastSeqSent(pdu_pedido.getSeq());
-                    entradaTabela.incPackagesSent();
                 } finally{
                     lockTabela.unlock();
                 }
@@ -64,15 +64,27 @@ public class ProbeRequester extends Thread {
 
                 lockTabela.lock();
                 try{
-                    if(entradaTabela.getLastSeqReceived()!=(nSeq-1)){
-                        entradaTabela.incPackagesLost();
+                    if(entradaTabela.getLastSeqReceived()==(nSeq-1)){
+                        entradaTabela.reportPkgStatus(PkgStatus.RECEIVED);
+                    }else{
+                        entradaTabela.reportPkgStatus(PkgStatus.LOST);
                     }
+
+                    pkgLossInfo = entradaTabela.getPackagesLost();
+                    percPkglost = (pkgLossInfo.getTotalPackages() != 0) ?
+                                    ((float) pkgLossInfo.getPkgCount() / pkgLossInfo.getTotalPackages())
+                                    :
+                                    0.0f;
+
+                    System.out.println("[ProbeRequester] Pacotes perdidos: " + pkgLossInfo.getPkgCount() +
+                                                                                "/" +
+                                                                                pkgLossInfo.getTotalPackages()+
+                                                                                " ( " + percPkglost +"%)");
+
                 } finally {
                     lockTabela.unlock();
                 }
-                System.out.println("[ProbeRequester] Pacotes perdidos: " + entradaTabela.getPackagesLost() +
-                                                                            "/" +
-                                                                            entradaTabela.getPackagesSent());
+
 
             } catch (IOException e) {
                 System.err.println("[ProbeRequester] Erro ao abrir ObjectOutputStream");

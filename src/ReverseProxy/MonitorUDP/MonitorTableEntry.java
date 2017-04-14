@@ -1,7 +1,5 @@
 package ReverseProxy.MonitorUDP;
 
-import ReverseProxy.ReverseProxy;
-
 import java.time.Duration;
 import java.time.Instant;
 
@@ -13,31 +11,23 @@ public class MonitorTableEntry {
     private Instant timeLastSeqReceived;
     private Instant timeLastSeqSent;
     private RTTMonitor monitorRTT;
-    private int packagesSent;
-    private int packagesLost;
+    private PkgLossMonitor pkgLossMonitor;
 
     public MonitorTableEntry(){
-        this(Instant.EPOCH, -1, -1,Instant.EPOCH,Instant.EPOCH,10);
+        this(Instant.EPOCH, -1, -1,Instant.EPOCH,Instant.EPOCH,100,100);
     }
 
-    public MonitorTableEntry(Instant lastAv){
-        this(lastAv, -1, -1,Instant.EPOCH,Instant.EPOCH,10);
-    }
-
-    public MonitorTableEntry(Instant lastAv, int rttEntries){
-        this(lastAv, -1, -1,Instant.EPOCH,Instant.EPOCH,rttEntries);
-    }
 
     public MonitorTableEntry(Instant lastAvailable, int lastSeqReceived, int lastSeqSent,
-                             Instant timeLastSeqReceived, Instant timeLastSeqSent, int rttEntries) {
+                             Instant timeLastSeqReceived, Instant timeLastSeqSent,
+                             int rttEntries, int pkgLossEntries) {
         this.lastAvailable = lastAvailable;
         this.lastSeqReceived = lastSeqReceived;
         this.lastSeqSent = lastSeqSent;
         this.timeLastSeqReceived = timeLastSeqReceived;
         this.timeLastSeqSent = timeLastSeqSent;
         this.monitorRTT = new RTTMonitor(rttEntries);
-        this.packagesSent = 0;
-        this.packagesLost = 0;
+        this.pkgLossMonitor = new PkgLossMonitor(pkgLossEntries);
     }
 
     public Instant getLastAvailable() {
@@ -89,22 +79,15 @@ public class MonitorTableEntry {
     }
 
     public int getNEntriesRTT(){
-        return monitorRTT.getValidEntries();
+        return monitorRTT.getnCurrentEntries();
     }
 
-    public int getPackagesSent() {
-        return packagesSent;
+    public void reportPkgStatus(PkgStatus s){
+        pkgLossMonitor.reportPkgStatus(s);
     }
 
-    public void incPackagesSent() {
-        this.packagesSent += 1;
+    public PkgLossInfo getPackagesLost() {
+        return pkgLossMonitor.getPkgLoss();
     }
 
-    public int getPackagesLost() {
-        return packagesLost;
-    }
-
-    public void incPackagesLost() {
-        this.packagesLost+=1;
-    }
 }

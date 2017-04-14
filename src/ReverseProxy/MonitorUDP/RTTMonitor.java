@@ -1,51 +1,83 @@
 package ReverseProxy.MonitorUDP;
 
-import ReverseProxy.ReverseProxy;
-
 import java.time.Duration;
 
 public class RTTMonitor {
 
-    private int nEntries;
-    private int validEntries;
+    private int totalPackages;
+    private Duration allTimeDuration;
+
+    private int nMaxEntriesMonitored;
+    private int nCurrentEntries;
+
     private int cursor;
     private Duration[] durations;
 
     public RTTMonitor() {
-        this(10);
+        this(100);
     }
 
-    public RTTMonitor(int nEntries) {
-        this.nEntries = nEntries;
-        durations = new Duration[nEntries];
-        validEntries=0;
-        cursor=0;
+    public RTTMonitor(int nMaxEntriesMonitored) {
+        this.totalPackages = 0;
+        this.allTimeDuration = Duration.ZERO;
+        this.nMaxEntriesMonitored = nMaxEntriesMonitored;
+        this.nCurrentEntries = 0;
+        this.durations = new Duration[nMaxEntriesMonitored];
+        this.cursor = 0;
     }
 
-    public void addEntry(Duration d){
+    public void addEntry(Duration d) {
+        totalPackages += 1;
+        allTimeDuration = allTimeDuration.plus(d);
+
         durations[cursor] = d;
-        cursor = (cursor+1)%nEntries;
-        if(validEntries < nEntries){
-            validEntries++;
+        cursor = (cursor + 1) % nMaxEntriesMonitored;
+        if (nCurrentEntries < nMaxEntriesMonitored) {
+            nCurrentEntries++;
         }
     }
 
-    public Duration getAverageRTT(){
+    public int getTotalPackages() {
+        return totalPackages;
+    }
+
+    public int getnMaxEntriesMonitored() {
+        return nMaxEntriesMonitored;
+    }
+
+    public Duration[] getDurations() {
+        return durations;
+    }
+
+    public Duration getAverageRTT() {
+        return getAverageRTT(nCurrentEntries);
+    }
+
+    public Duration getAverageRTT(int nLastEntries) {
         Duration res = Duration.ZERO;
 
-        for(int i=0; i<validEntries;i++){
-            res = res.plus(durations[i]);
+        if(nLastEntries > nCurrentEntries){
+            nLastEntries = nCurrentEntries;
         }
 
-        if(validEntries!=0){
-            res = res.dividedBy(validEntries);
+        if (nLastEntries != 0) {
+
+            for (int i = 0; i < nLastEntries; i++) {
+                res = res.plus(durations[(cursor - (i+1)) % nMaxEntriesMonitored]);
+            }
+
+            res = res.dividedBy(nLastEntries);
         }
 
         return res;
     }
 
-    public int getValidEntries(){
-        return validEntries;
+    public Duration getAllTimeAverageRTT() {
+        return (totalPackages!=0) ? allTimeDuration.dividedBy(totalPackages) : Duration.ZERO;
+    }
+
+    public int getnCurrentEntries() {
+        return nCurrentEntries;
     }
 
 }
