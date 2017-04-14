@@ -92,11 +92,12 @@ public class ProbeRequester extends Thread {
                 System.out.println("[ProbeRequester] Pacotes perdidos: " + pkgLossInfo.getPkgCount() +
                         "/" +
                         pkgLossInfo.getTotalPackages()+
-                        " (" + percPkglost +"%)");
+                        " (" + percPkglost*100 +"%)");
 
                 lockTabela.lock();
                 timeSinceLastAvailable = Duration.between(entradaTabela.getLastAvailable(), Instant.now());
-                if(timeSinceLastAvailable.getSeconds() >30){
+                if(timeSinceLastAvailable.getSeconds() > 120){
+                    System.out.println("[ProbeRequester] A terminar ligação a " + hostAddress + " por inactividade.");
                     exit=true;
                     tabelaMonitorizacao.deleteEntry(hostAddress);
                 }
@@ -115,5 +116,5 @@ public class ProbeRequester extends Thread {
         return;
     }
 
-    
+
 }
