@@ -1,2 +1,2 @@
 # CC-1617
-Trabalho de Computação Gráfica.
+Trabalho de Comunicações por Computador.
