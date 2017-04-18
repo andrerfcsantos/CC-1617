@@ -66,21 +66,24 @@ public class ProxyReceiver extends Thread{
                         break;
                     case PROB_REPLY:
                         Duration rtt, averageRTT;
+                        MonitorTableEntry entry;
+
                         lockTabela.lock();
-                        try{
-                            MonitorTableEntry entry = tabelaMonitorizacao.getEntry(endereco_origem);
-                            entry.setLastSeqReceived(pdu_pedido.getSeq());
-                            entry.setLastAvailable(pdu_pedido.getTimeSent());
-                            if(entry.getLastSeqReceived()==entry.getLastSeqSent()){
-                                rtt=Duration.between(entry.getTimeLastSeqSent(), Instant.now());
-                                entry.addRTTEntry(rtt);
-                            }
-                            averageRTT = entry.getAverageRTT();
-                            System.out.println("[ProxyReceiver] RTT médio: " + averageRTT.toMillis() + " ms " +
-                                                "com base em " + entry.getNEntriesRTT() + " pacotes.");
-                        } finally {
-                            lockTabela.unlock();
+                        entry = tabelaMonitorizacao.getEntry(endereco_origem);
+                        entry.lock();
+                        lockTabela.unlock();
+                        entry.setLastSeqReceived(pdu_pedido.getSeq());
+                        entry.setLastAvailable(pdu_pedido.getTimeSent());
+                        if(entry.getLastSeqReceived()==entry.getLastSeqSent()){
+                            rtt=Duration.between(entry.getTimeLastSeqSent(), Instant.now());
+                            entry.addRTTEntry(rtt);
                         }
+                        averageRTT = entry.getAverageRTT();
+                        System.out.println("[ProxyReceiver] RTT médio: " + averageRTT.toMillis() + " ms " +
+                                "com base em " + entry.getNEntriesRTT() + " pacotes.");
+                        entry.unlock();
+
+
 
                         break;
                     case PROB_REQUEST:
