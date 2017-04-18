@@ -85,9 +85,7 @@ public class ProbeRequester extends Thread {
                 }
 
                 percPkglost = (pkgLossInfo.getTotalPackages() != 0) ?
-                        ((float) pkgLossInfo.getPkgCount() / pkgLossInfo.getTotalPackages())
-                        :
-                        0.0f;
+                        ((float) pkgLossInfo.getPkgCount() / pkgLossInfo.getTotalPackages()) : 0.0f;
 
                 System.out.println("[ProbeRequester] Pacotes perdidos: " + pkgLossInfo.getPkgCount() +
                         "/" +
