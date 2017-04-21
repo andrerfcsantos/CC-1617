@@ -10,7 +10,6 @@ import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.time.Duration;
 import java.time.Instant;
-import java.util.concurrent.locks.ReentrantLock;
 
 public class ProbeRequester extends Thread {
 
@@ -18,17 +17,15 @@ public class ProbeRequester extends Thread {
     private InetAddress hostAddress;
     private MonitorTableEntry entradaTabela;
     private int nSeq;
-    private ReentrantLock lockTabela;
     private boolean exit;
     private MonitorTable tabelaMonitorizacao;
 
     public ProbeRequester(InetAddress hostAdd,
-                          MonitorTable tabelaMonitorizacao,  MonitorTableEntry entradaTabela, ReentrantLock lockTabela,
+                          MonitorTable tabelaMonitorizacao,  MonitorTableEntry entradaTabela,
                           DatagramSocket socket){
             this.tabelaMonitorizacao = tabelaMonitorizacao;
             this.nSeq=0;
             this.hostAddress = hostAdd;
-            this.lockTabela = lockTabela;
             this.socket = socket;
             this.exit = false;
             this.entradaTabela = entradaTabela;
@@ -59,18 +56,18 @@ public class ProbeRequester extends Thread {
                 pacote_out = new DatagramPacket(b_array, b_array.length, hostAddress, 5555);
                 socket.send(pacote_out);
 
-                lockTabela.lock();
+                entradaTabela.lock();
                 try{
                     entradaTabela.setTimeLastSeqSent(pdu_pedido.getTimeSent());
                     entradaTabela.setLastSeqSent(pdu_pedido.getSeq());
                 } finally{
-                    lockTabela.unlock();
+                    entradaTabela.unlock();
                 }
                 System.out.println("[ProbeRequester] Pedido enviado: " + pdu_pedido.toString());
                 nSeq++;
                 Thread.sleep(5000);
 
-                lockTabela.lock();
+                entradaTabela.lock();
                 try{
                     if(entradaTabela.getLastSeqReceived()==(nSeq-1)){
                         entradaTabela.reportPkgStatus(PkgStatus.RECEIVED);
@@ -81,7 +78,7 @@ public class ProbeRequester extends Thread {
                     pkgLossInfo = entradaTabela.getPackagesLost();
 
                 } finally {
-                    lockTabela.unlock();
+                    entradaTabela.unlock();
                 }
 
                 percPkglost = (pkgLossInfo.getTotalPackages() != 0) ?
@@ -92,14 +89,14 @@ public class ProbeRequester extends Thread {
                         pkgLossInfo.getTotalPackages()+
                         " (" + percPkglost*100 +"%)");
 
-                lockTabela.lock();
+                tabelaMonitorizacao.lock();
                 timeSinceLastAvailable = Duration.between(entradaTabela.getLastAvailable(), Instant.now());
                 if(timeSinceLastAvailable.getSeconds() > 120){
                     System.out.println("[ProbeRequester] A terminar ligação a " + hostAddress + " por inactividade.");
                     exit=true;
                     tabelaMonitorizacao.deleteEntry(hostAddress);
                 }
-                lockTabela.unlock();
+                tabelaMonitorizacao.unlock();
 
 
             } catch (IOException e) {

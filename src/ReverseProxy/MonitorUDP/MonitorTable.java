@@ -2,13 +2,15 @@ package ReverseProxy.MonitorUDP;
 
 
 import java.net.InetAddress;
-import java.time.Instant;
 import java.util.HashMap;
+import java.util.concurrent.locks.ReentrantLock;
 
 public class MonitorTable {
     private HashMap<InetAddress,MonitorTableEntry> tabela;
+    private ReentrantLock lock;
 
     public MonitorTable(){
+        lock = new ReentrantLock();
         tabela = new HashMap<>();
     }
 
@@ -20,18 +22,23 @@ public class MonitorTable {
         tabela.put(ip,entrada);
     }
 
-    public void setLastAvailable(InetAddress ip, Instant ins){
-        MonitorTableEntry entry = tabela.get(ip);
-        entry.setLastAvailable(ins);
-    }
-
     public MonitorTableEntry getEntry(InetAddress ip){
         return tabela.get(ip);
     }
 
     public void deleteEntry(InetAddress ip){
+        MonitorTableEntry entrada = tabela.get(ip);
+        entrada.lock();
         tabela.remove(ip);
+        entrada.unlock();
     }
 
+    public void lock(){
+        lock.lock();
+    }
+
+    public void unlock(){
+        lock.unlock();
+    }
 
 }

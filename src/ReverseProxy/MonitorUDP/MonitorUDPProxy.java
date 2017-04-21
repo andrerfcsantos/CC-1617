@@ -1,8 +1,5 @@
 package ReverseProxy.MonitorUDP;
 
-import WebServer.MonitorUDP.DispAnnouncer;
-import WebServer.MonitorUDP.ProbeReplier;
-
 import java.net.DatagramSocket;
 import java.net.SocketException;
 import java.util.concurrent.locks.ReentrantLock;
@@ -10,12 +7,10 @@ import java.util.concurrent.locks.ReentrantLock;
 public class MonitorUDPProxy extends Thread{
 
     private MonitorTable tabelaMonitorizacao;
-    private ReentrantLock lockTabela;
     private DatagramSocket socketUDP;
 
     public MonitorUDPProxy(MonitorTable tabela,ReentrantLock lockTabela){
         this.tabelaMonitorizacao=tabela;
-        this.lockTabela = lockTabela;
     }
 
     @Override
@@ -23,7 +18,7 @@ public class MonitorUDPProxy extends Thread{
         try {
             socketUDP = new DatagramSocket(5555);
             System.out.println("[MonitorUDPProxy] A iniciar ProxyReceiver...");
-            new ProxyReceiver(tabelaMonitorizacao,lockTabela,socketUDP).start();
+            new ProxyReceiver(tabelaMonitorizacao,socketUDP).start();
             System.out.println("[MonitorUDPProxy] ProxyReceiver iniciado.");
         } catch (SocketException e) {
             System.err.println("[MonitorUDPProxy] Erro ao abrir socket UDP.");

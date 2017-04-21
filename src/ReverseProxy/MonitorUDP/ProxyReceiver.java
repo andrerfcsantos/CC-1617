@@ -9,17 +9,14 @@ import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.time.Duration;
 import java.time.Instant;
-import java.util.concurrent.locks.ReentrantLock;
 
 public class ProxyReceiver extends Thread{
     private MonitorTable tabelaMonitorizacao;
     private DatagramSocket socket;
-    private ReentrantLock lockTabela;
 
 
-    public ProxyReceiver(MonitorTable tabela,ReentrantLock lockTabela,DatagramSocket socket){
+    public ProxyReceiver(MonitorTable tabela,DatagramSocket socket){
         this.tabelaMonitorizacao = tabela;
-        this.lockTabela = lockTabela;
         this.socket = socket;
     }
 
@@ -34,7 +31,7 @@ public class ProxyReceiver extends Thread{
         byte buf_in[];
 
         while (true) {
-
+            MonitorTableEntry entry;
             try {
                 buf_in = new byte[1024];
                 pacote_in = new DatagramPacket(buf_in, buf_in.length);
@@ -47,31 +44,30 @@ public class ProxyReceiver extends Thread{
 
                 switch (pdu_pedido.getTipo()){
                     case DISPONIVEL:
-
-                        lockTabela.lock();
+                        tabelaMonitorizacao.lock();
                         try{
                             if(tabelaMonitorizacao.ipExists(endereco_origem)){
-                                tabelaMonitorizacao.setLastAvailable(endereco_origem, pdu_pedido.getTimeSent());
+                                entry = tabelaMonitorizacao.getEntry(endereco_origem);
+                                entry.lock();
+                                entry.setLastAvailable(pdu_pedido.getTimeSent());
+                                entry.unlock();
                             }else{
                                 System.out.println("[ProxyReceiver] Registo de novo servidor em " + endereco_origem.toString());
                                 entradaTabela = new MonitorTableEntry();
                                 tabelaMonitorizacao.addEntry(endereco_origem, entradaTabela);
                                 entradaTabela.setLastAvailable(pdu_pedido.getTimeSent());
-                                new ProbeRequester(endereco_origem, tabelaMonitorizacao, entradaTabela, lockTabela, socket).start();
+                                new ProbeRequester(endereco_origem, tabelaMonitorizacao, entradaTabela, socket).start();
                             }
                         } finally{
-                            lockTabela.unlock();
+                            tabelaMonitorizacao.unlock();
                         }
 
                         break;
                     case PROB_REPLY:
                         Duration rtt, averageRTT;
-                        MonitorTableEntry entry;
-
-                        lockTabela.lock();
+                        tabelaMonitorizacao.lock();
                         entry = tabelaMonitorizacao.getEntry(endereco_origem);
                         entry.lock();
-                        lockTabela.unlock();
                         entry.setLastSeqReceived(pdu_pedido.getSeq());
                         entry.setLastAvailable(pdu_pedido.getTimeSent());
                         if(entry.getLastSeqReceived()==entry.getLastSeqSent()){
@@ -82,8 +78,7 @@ public class ProxyReceiver extends Thread{
                         System.out.println("[ProxyReceiver] RTT médio: " + averageRTT.toMillis() + " ms " +
                                 "com base em " + entry.getNEntriesRTT() + " pacotes.");
                         entry.unlock();
-
-
+                        tabelaMonitorizacao.unlock();
 
                         break;
                     case PROB_REQUEST:
