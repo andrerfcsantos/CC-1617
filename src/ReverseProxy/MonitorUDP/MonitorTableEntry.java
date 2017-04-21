@@ -2,6 +2,7 @@ package ReverseProxy.MonitorUDP;
 
 import java.time.Duration;
 import java.time.Instant;
+import java.util.concurrent.locks.ReentrantLock;
 
 public class MonitorTableEntry {
 
@@ -12,6 +13,7 @@ public class MonitorTableEntry {
     private Instant timeLastSeqSent;
     private RTTMonitor monitorRTT;
     private PkgLossMonitor pkgLossMonitor;
+    private ReentrantLock lock;
 
     public MonitorTableEntry(){
         this(Instant.EPOCH, -1, -1,Instant.EPOCH,Instant.EPOCH,100,100);
@@ -28,6 +30,7 @@ public class MonitorTableEntry {
         this.timeLastSeqSent = timeLastSeqSent;
         this.monitorRTT = new RTTMonitor(rttEntries);
         this.pkgLossMonitor = new PkgLossMonitor(pkgLossEntries);
+        this.lock = new ReentrantLock();
     }
 
     public Instant getLastAvailable() {
@@ -96,6 +99,14 @@ public class MonitorTableEntry {
 
     public int getTotalPackages() {
         return pkgLossMonitor.getTotalPackages();
+    }
+
+    public void lock(){
+        this.lock.lock();
+    }
+
+    public void unlock(){
+        this.lock.unlock();
     }
 
 }
