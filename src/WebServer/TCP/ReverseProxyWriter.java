@@ -33,6 +33,7 @@ public class ReverseProxyWriter extends Thread{
                 System.out.println("[WebServer] Resposta enviada: "+ str_resposta);
             }
 
+            socketRP.shutdownOutput();
             socketRP.close();
         } catch (IOException e) {
             e.printStackTrace();

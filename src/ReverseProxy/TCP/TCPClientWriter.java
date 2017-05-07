@@ -28,15 +28,18 @@ public class TCPClientWriter extends Thread{
             PrintWriter writer = new PrintWriter(streamEscrita);
             BufferedReader reader = new BufferedReader(new InputStreamReader(streamLeitura));
 
-            while (!sockCliente.isClosed() && (str_resposta = reader.readLine()) != null){
+            while ((str_resposta = reader.readLine()) != null){
                 System.out.println("[TCPClientWriter] Resposta lido: " + str_resposta);
                 writer.println(str_resposta);
                 System.out.println("[TCPClientWriter] Resposta enviada para cliente.");
                 writer.flush();
             }
 
+            sockCliente.shutdownOutput();
+
             sockCliente.close();
             sockWebServer.close();
+
         } catch (IOException e) {
             System.err.println("[TCPClientWriter] Erro a abrir input stream");
         }
