@@ -27,7 +27,7 @@ public class Cliente {
             System.out.println("[CLIENTE] Pedido enviado: " + str_pedido);
 
             str_resposta = reader.readLine();
-            System.out.print("[CLIENTE] Resposta recebida: " + str_resposta);
+            System.out.println("[CLIENTE] Resposta recebida: " + str_resposta);
 
             writer.close();
             reader.close();

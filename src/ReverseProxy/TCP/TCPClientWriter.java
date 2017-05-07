@@ -29,7 +29,9 @@ public class TCPClientWriter extends Thread{
             BufferedReader reader = new BufferedReader(new InputStreamReader(streamLeitura));
 
             while ((str_resposta = reader.readLine()) != null){
+                System.out.println("[TCPClientWriter] Resposta lido: " + str_resposta);
                 writer.println(str_resposta);
+                System.out.println("[TCPClientWriter] Resposta enviada para cliente.");
                 writer.flush();
             }
 
@@ -38,7 +40,7 @@ public class TCPClientWriter extends Thread{
             streamEscrita.close();
             streamLeitura.close();
         } catch (IOException e) {
-            System.err.println("[TCPClientListener] Erro a abrir input stream");
+            System.err.println("[TCPClientWriter] Erro a abrir input stream");
         }
 
 

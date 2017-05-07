@@ -28,7 +28,9 @@ public class TCPClientListener extends Thread {
             BufferedReader reader = new BufferedReader(new InputStreamReader(streamLeitura));
 
             while ((str_pedido = reader.readLine()) != null){
+                System.out.println("[TCPClientListener] Pedido lido: " + str_pedido);
                 writer.println(str_pedido);
+                System.out.println("[TCPClientListener] Pedido enviado para WebServer.");
                 writer.flush();
             }
 
