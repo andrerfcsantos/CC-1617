@@ -37,6 +37,8 @@ public class TCPMain extends Thread {
 
                 for(Map.Entry<InetAddress,MonitorTableEntry> entrada: tabelaMonitorizacao.tabela.entrySet()){
                     double pontuacao=0;
+                    double p_ld, p_rtt,p_perdas,p_nConexoes;
+
                     InetAddress ip = entrada.getKey();
                     MonitorTableEntry entradaTabela = entrada.getValue();
 
@@ -45,10 +47,15 @@ public class TCPMain extends Thread {
                     int perdas = entradaTabela.getPackagesLost(10).getPkgCount();
                     int nConexoes = entradaTabela.getnConexoes();
 
-                    pontuacao += (double) 0.15*lastDisp.toMillis()/ 3000.0;
-                    pontuacao += (double) 0.15*rtt.toMillis()/150.0;
-                    pontuacao += (double) 0.35*perdas/1.0;
-                    pontuacao += (double) 0.35*nConexoes/3.0;
+                    p_ld = (double) 0.15*lastDisp.toMillis()/ 3000.0;
+                    p_rtt = (double) 0.15*rtt.toMillis()/150.0;
+                    p_perdas = (double) 0.35*perdas/1.0;
+                    p_nConexoes = (double) 0.35*nConexoes/3.0;
+
+                    pontuacao = p_ld + p_rtt + p_perdas + p_nConexoes;
+
+                    System.out.println("[TCPMain] Pontuacao para " + ip + " = " +  pontuacao +
+                                        "( " + p_ld  + " , " + p_rtt  + " , " + p_perdas + " , " + p_nConexoes +  ")" );
 
                     if(pontuacao < melhorPontuacao) {
                         ipMelhorWebServer = ip;
