@@ -26,6 +26,9 @@ manifest.mf
 ## Plugin-specific files:
 
 # IntelliJ
+**/out/*
+!**/out/jars/*.jar
+!**/out/jars/dummy/*
 
 
 # mpeltonen/sbt-idea plugin
