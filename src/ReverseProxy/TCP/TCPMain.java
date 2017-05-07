@@ -47,10 +47,10 @@ public class TCPMain extends Thread {
                     int perdas = entradaTabela.getPackagesLost(10).getPkgCount();
                     int nConexoes = entradaTabela.getnConexoes();
 
-                    p_ld = (double) 0.15*lastDisp.toMillis()/ 3000.0;
-                    p_rtt = (double) 0.15*rtt.toMillis()/150.0;
-                    p_perdas = (double) 0.35*perdas/1.0;
-                    p_nConexoes = (double) 0.35*nConexoes/3.0;
+                    p_ld = (double) 0.20*lastDisp.toMillis()/ 3000.0;
+                    p_rtt = (double) 0.20*rtt.toMillis()/150.0;
+                    p_perdas = (double) 0.30*perdas/5.0;
+                    p_nConexoes = (double) 0.30*nConexoes/3.0;
 
                     pontuacao = p_ld + p_rtt + p_perdas + p_nConexoes;
 
