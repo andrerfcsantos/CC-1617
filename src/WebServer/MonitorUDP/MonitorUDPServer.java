@@ -23,10 +23,11 @@ public class MonitorUDPServer extends Thread{
             System.out.println("[MonitorUDPServer] A iniciar DispAnnouncer...");
             new DispAnnouncer(hostName,socketUDP).start();
             System.out.println("[MonitorUDPServer] DispAnnouncer iniciado.");
-            System.out.println("[MonitorUDPServer] A iniciar ProbeReplier...");
 
+            System.out.println("[MonitorUDPServer] A iniciar ProbeReplier...");
             new ProbeReplier(socketUDP).start();
             System.out.println("[MonitorUDPServer] ProbeReplier iniciado.");
+
         } catch (SocketException e) {
             System.err.println("[MonitorUDPServer] Erro ao abrir socket UDP.");
         }

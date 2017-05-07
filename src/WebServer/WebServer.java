@@ -1,6 +1,7 @@
 package WebServer;
 
 import WebServer.MonitorUDP.MonitorUDPServer;
+import WebServer.TCP.TCPMain;
 
 public class WebServer {
     public static void main(String[] args) {
@@ -14,9 +15,15 @@ public class WebServer {
 
 
         System.out.println("[WebServer] A iniciar Web Server com host " + host +" ...");
+
         System.out.println("[WebServer] A iniciar MonitorUDPServer..");
         new MonitorUDPServer(host).start();
         System.out.println("[WebServer] MonitorUDPServer iniciado.");
+
+        System.out.println("[WebServer] A iniciar TCPMain..");
+        new TCPMain().start();
+        System.out.println("[WebServer] TCPMain iniciado.");
+
         System.out.println("[WebServer] WebServer iniciado.");
     }
 }

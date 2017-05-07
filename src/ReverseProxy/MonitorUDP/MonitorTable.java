@@ -6,8 +6,8 @@ import java.util.HashMap;
 import java.util.concurrent.locks.ReentrantLock;
 
 public class MonitorTable {
-    private HashMap<InetAddress,MonitorTableEntry> tabela;
-    private ReentrantLock lock;
+    public HashMap<InetAddress,MonitorTableEntry> tabela;
+    public ReentrantLock lock;
 
     public MonitorTable(){
         lock = new ReentrantLock();

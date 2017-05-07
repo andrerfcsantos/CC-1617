@@ -9,7 +9,7 @@ public class MonitorUDPProxy extends Thread{
     private MonitorTable tabelaMonitorizacao;
     private DatagramSocket socketUDP;
 
-    public MonitorUDPProxy(MonitorTable tabela,ReentrantLock lockTabela){
+    public MonitorUDPProxy(MonitorTable tabela){
         this.tabelaMonitorizacao=tabela;
     }
 
