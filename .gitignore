@@ -27,7 +27,9 @@ manifest.mf
 
 # IntelliJ
 **/out/*
-!**/out/jars/*.jar
+!**/out/jars/WebServer.jar
+!**/out/jars/ReverseProxy.jar
+!**/out/jars/Cliente.jar
 !**/out/jars/dummy/*
 
 
