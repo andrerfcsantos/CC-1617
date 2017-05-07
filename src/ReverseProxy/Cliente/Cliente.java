@@ -35,10 +35,7 @@ public class Cliente {
                 System.out.println("[CLIENTE] Resposta recebida: " + str_resposta);
             }
 
-            writer.close();
-            reader.close();
-            sockInpStream.close();
-            sockOutStream.close();
+            socket.close();
 
         } catch (IOException e) {
             System.err.println("[CLIENTE] Erro ao abrir socket");

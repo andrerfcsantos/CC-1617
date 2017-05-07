@@ -35,10 +35,8 @@ public class TCPClientWriter extends Thread{
                 writer.flush();
             }
 
-            writer.close();
-            reader.close();
-            streamEscrita.close();
-            streamLeitura.close();
+            sockCliente.close();
+            sockWebServer.close();
         } catch (IOException e) {
             System.err.println("[TCPClientWriter] Erro a abrir input stream");
         }

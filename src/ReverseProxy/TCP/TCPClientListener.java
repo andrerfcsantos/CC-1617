@@ -42,10 +42,8 @@ public class TCPClientListener extends Thread {
             entradaTabela.decNConexoes();
             entradaTabela.unlock();
 
-            writer.close();
-            reader.close();
-            streamEscrita.close();
-            streamLeitura.close();
+            sockCliente.close();
+            sockWebServer.close();
         } catch (IOException e) {
             System.err.println("[TCPClientListener] Erro a abrir input stream");
         }
