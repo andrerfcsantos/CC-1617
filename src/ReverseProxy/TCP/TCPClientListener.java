@@ -1,5 +1,7 @@
 package ReverseProxy.TCP;
 
+import ReverseProxy.MonitorUDP.MonitorTableEntry;
+
 import java.io.*;
 import java.net.Socket;
 
@@ -7,12 +9,14 @@ public class TCPClientListener extends Thread {
 
     public Socket sockCliente;
     public Socket sockWebServer;
+    public MonitorTableEntry entradaTabela;
     public int READ_SIZE = 1024;
 
 
-    public TCPClientListener(Socket sockCliente, Socket sockWebServer){
+    public TCPClientListener(MonitorTableEntry entradaTabela, Socket sockCliente, Socket sockWebServer){
         this.sockCliente = sockCliente;
         this.sockWebServer = sockWebServer;
+        this.entradaTabela = entradaTabela;
     }
 
     @Override
@@ -33,6 +37,10 @@ public class TCPClientListener extends Thread {
                 System.out.println("[TCPClientListener] Pedido enviado para WebServer.");
                 writer.flush();
             }
+
+            entradaTabela.lock();
+            entradaTabela.decNConexoes();
+            entradaTabela.unlock();
 
             writer.close();
             reader.close();

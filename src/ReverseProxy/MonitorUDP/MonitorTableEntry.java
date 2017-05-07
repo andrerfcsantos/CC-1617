@@ -6,6 +6,7 @@ import java.util.concurrent.locks.ReentrantLock;
 
 public class MonitorTableEntry {
 
+    private int nConexoes;
     private Instant lastAvailable;
     private int lastSeqReceived;
     private int lastSeqSent;
@@ -16,13 +17,13 @@ public class MonitorTableEntry {
     private ReentrantLock lock;
 
     public MonitorTableEntry(){
-        this(Instant.EPOCH, -1, -1,Instant.EPOCH,Instant.EPOCH,100,100);
+        this(Instant.EPOCH, -1, -1,Instant.EPOCH,Instant.EPOCH,100,100,0);
     }
 
 
     public MonitorTableEntry(Instant lastAvailable, int lastSeqReceived, int lastSeqSent,
                              Instant timeLastSeqReceived, Instant timeLastSeqSent,
-                             int rttEntries, int pkgLossEntries) {
+                             int rttEntries, int pkgLossEntries, int nConexoes) {
         this.lastAvailable = lastAvailable;
         this.lastSeqReceived = lastSeqReceived;
         this.lastSeqSent = lastSeqSent;
@@ -31,6 +32,7 @@ public class MonitorTableEntry {
         this.monitorRTT = new RTTMonitor(rttEntries);
         this.pkgLossMonitor = new PkgLossMonitor(pkgLossEntries);
         this.lock = new ReentrantLock();
+        this.nConexoes = nConexoes;
     }
 
     public Instant getLastAvailable() {
@@ -81,6 +83,10 @@ public class MonitorTableEntry {
         return monitorRTT.getAverageRTT();
     }
 
+    public Duration getAverageRTT(int nEntries){
+        return monitorRTT.getAverageRTT(nEntries);
+    }
+
     public int getNEntriesRTT(){
         return monitorRTT.getnCurrentEntries();
     }
@@ -99,6 +105,18 @@ public class MonitorTableEntry {
 
     public int getTotalPackages() {
         return pkgLossMonitor.getTotalPackages();
+    }
+
+    public int getnConexoes(){
+        return this.nConexoes;
+    }
+
+    public void decNConexoes(){
+        this.nConexoes--;
+    }
+
+    public void incNConexoes(){
+        this.nConexoes++;
     }
 
     public void lock(){

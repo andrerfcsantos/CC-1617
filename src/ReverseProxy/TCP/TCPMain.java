@@ -7,6 +7,8 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.time.Duration;
+import java.time.Instant;
 import java.util.Map;
 
 public class TCPMain extends Thread {
@@ -29,11 +31,42 @@ public class TCPMain extends Thread {
                 sockCliente = ss.accept();
 
                 tabelaMonitorizacao.lock();
-                InetAddress ip = (InetAddress) tabelaMonitorizacao.tabela.keySet().toArray()[0];
+                InetAddress ipMelhorWebServer = null;
+                MonitorTableEntry melhorEntrada = null;
+                double melhorPontuacao = Double.MAX_VALUE;
+
+                for(Map.Entry<InetAddress,MonitorTableEntry> entrada: tabelaMonitorizacao.tabela.entrySet()){
+                    double pontuacao=0;
+                    InetAddress ip = entrada.getKey();
+                    MonitorTableEntry entradaTabela = entrada.getValue();
+
+                    Duration lastDisp = Duration.between(entradaTabela.getLastAvailable(),Instant.now());
+                    Duration rtt = entradaTabela.getAverageRTT(10);
+                    int perdas = entradaTabela.getPackagesLost(10).getPkgCount();
+                    int nConexoes = entradaTabela.getnConexoes();
+
+                    pontuacao += (double) 0.15*lastDisp.toMillis()/ 3000.0;
+                    pontuacao += (double) 0.15*rtt.toMillis()/150.0;
+                    pontuacao += (double) 0.35*perdas/1.0;
+                    pontuacao += (double) 0.35*nConexoes/3.0;
+
+                    if(pontuacao < melhorPontuacao) {
+                        ipMelhorWebServer = ip;
+                        melhorEntrada = entradaTabela;
+                        melhorPontuacao = pontuacao;
+                    }
+                }
                 tabelaMonitorizacao.unlock();
 
-                Socket sockWebServer = new Socket(ip,80);
-                new TCPClientListener(sockCliente,sockWebServer).start();
+                System.out.println("[TCPMain] Escolhido melhor server: " +  ipMelhorWebServer + " com pontuacao " + melhorPontuacao);
+
+                Socket sockWebServer = new Socket(ipMelhorWebServer,80);
+
+                melhorEntrada.lock();
+                melhorEntrada.incNConexoes();
+                melhorEntrada.unlock();
+
+                new TCPClientListener(melhorEntrada,sockCliente,sockWebServer).start();
                 new TCPClientWriter(sockCliente,sockWebServer).start();
             }
 
