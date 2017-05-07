@@ -28,7 +28,7 @@ public class TCPClientWriter extends Thread{
             PrintWriter writer = new PrintWriter(streamEscrita);
             BufferedReader reader = new BufferedReader(new InputStreamReader(streamLeitura));
 
-            while ((str_resposta = reader.readLine()) != null){
+            while (!sockCliente.isClosed() && (str_resposta = reader.readLine()) != null){
                 System.out.println("[TCPClientWriter] Resposta lido: " + str_resposta);
                 writer.println(str_resposta);
                 System.out.println("[TCPClientWriter] Resposta enviada para cliente.");

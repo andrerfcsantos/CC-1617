@@ -11,7 +11,7 @@ public class Cliente {
     public static void main(String[] args) {
 
         try {
-            String str_pedido = "ECHO REQUEST";
+            //String str_pedido = "ECHO REQUEST";
             String str_resposta;
 
             Socket socket = new Socket(args[0],80);
@@ -22,12 +22,18 @@ public class Cliente {
             PrintWriter writer = new PrintWriter(sockOutStream);
             BufferedReader reader = new BufferedReader(new InputStreamReader(sockInpStream));
 
-            writer.println(str_pedido);
-            writer.flush();
-            System.out.println("[CLIENTE] Pedido enviado: " + str_pedido);
 
-            str_resposta = reader.readLine();
-            System.out.println("[CLIENTE] Resposta recebida: " + str_resposta);
+            String str_user;
+            BufferedReader reader_usr = new BufferedReader(new InputStreamReader(System.in));
+            while((str_user = reader_usr.readLine())!=null){
+
+                writer.println(str_user);
+                writer.flush();
+                System.out.println("[CLIENTE] Pedido enviado: " + str_user);
+
+                str_resposta = reader.readLine();
+                System.out.println("[CLIENTE] Resposta recebida: " + str_resposta);
+            }
 
             writer.close();
             reader.close();
