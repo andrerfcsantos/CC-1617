@@ -26,11 +26,6 @@ manifest.mf
 ## Plugin-specific files:
 
 # IntelliJ
-**/out/*
-!**/out/jars/WebServer.jar
-!**/out/jars/ReverseProxy.jar
-!**/out/jars/Cliente.jar
-!**/out/jars/dummy/*
 
 
 # mpeltonen/sbt-idea plugin
