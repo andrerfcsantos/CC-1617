@@ -1,85 +1,30 @@
 package ReverseProxy.TCP;
 
 import ReverseProxy.MonitorUDP.MonitorTable;
-import ReverseProxy.MonitorUDP.MonitorTableEntry;
+import com.sun.net.httpserver.HttpServer;
 
 import java.io.IOException;
-import java.net.InetAddress;
-import java.net.ServerSocket;
-import java.net.Socket;
-import java.time.Duration;
-import java.time.Instant;
-import java.util.Map;
+import java.net.InetSocketAddress;
 
 public class TCPMain extends Thread {
 
-    ServerSocket ss;
     MonitorTable tabelaMonitorizacao;
 
     public TCPMain (MonitorTable tabelaMonitorizacao){
         this.tabelaMonitorizacao = tabelaMonitorizacao;
     }
 
-
     @Override
     public void run() {
         try {
-            Socket sockCliente;
-            ss = new ServerSocket(80);
-
-            while(true){
-                sockCliente = ss.accept();
-
-                tabelaMonitorizacao.lock();
-                InetAddress ipMelhorWebServer = null;
-                MonitorTableEntry melhorEntrada = null;
-                double melhorPontuacao = Double.MAX_VALUE;
-
-                for(Map.Entry<InetAddress,MonitorTableEntry> entrada: tabelaMonitorizacao.tabela.entrySet()){
-                    double pontuacao=0;
-                    double p_ld, p_rtt,p_perdas,p_nConexoes;
-
-                    InetAddress ip = entrada.getKey();
-                    MonitorTableEntry entradaTabela = entrada.getValue();
-
-                    Duration lastDisp = Duration.between(entradaTabela.getLastAvailable(),Instant.now());
-                    Duration rtt = entradaTabela.getAverageRTT(10);
-                    int perdas = entradaTabela.getPackagesLost(10).getPkgCount();
-                    int nConexoes = entradaTabela.getnConexoes();
-
-                    p_ld = (double) 0.20*lastDisp.toMillis()/ 3000.0;
-                    p_rtt = (double) 0.20*rtt.toMillis()/150.0;
-                    p_perdas = (double) 0.30*perdas/5.0;
-                    p_nConexoes = (double) 0.30*nConexoes/3.0;
-
-                    pontuacao = p_ld + p_rtt + p_perdas + p_nConexoes;
-
-                    System.out.println("[TCPMain] Pontuacao para " + ip + " = " +  pontuacao +
-                                        "( " + p_ld  + " , " + p_rtt  + " , " + p_perdas + " , " + p_nConexoes +  ")" );
-
-                    if(pontuacao < melhorPontuacao) {
-                        ipMelhorWebServer = ip;
-                        melhorEntrada = entradaTabela;
-                        melhorPontuacao = pontuacao;
-                    }
-                }
-                tabelaMonitorizacao.unlock();
-
-                System.out.println("[TCPMain] Escolhido melhor server: " +  ipMelhorWebServer + " com pontuacao " + melhorPontuacao);
-
-                Socket sockWebServer = new Socket(ipMelhorWebServer,80);
-
-                melhorEntrada.lock();
-                melhorEntrada.incNConexoes();
-                melhorEntrada.unlock();
-
-                new TCPClientListener(melhorEntrada,sockCliente,sockWebServer).start();
-                new TCPClientWriter(sockCliente,sockWebServer).start();
-            }
-
-
+            HttpServer server = HttpServer.create(new InetSocketAddress(80), 0);
+            server.createContext("/", new ClientReaderHandler(tabelaMonitorizacao));
+            server.start();
         } catch (IOException e) {
-            System.err.println("[TCPMain] Erro ao abrir Socket");
+            System.err.println("[TCPMain] Erro http server");
         }
     }
+
+
+
 }
