@@ -19,7 +19,7 @@ public class WebServer {
         System.out.println("[WebServer] A iniciar MonitorUDPServer..");
         new MonitorUDPServer(host).start();
         System.out.println("[WebServer] MonitorUDPServer iniciado.");
-        
+
 
         System.out.println("[WebServer] WebServer iniciado.");
     }

@@ -81,6 +81,7 @@ public class ClientReaderHandler implements HttpHandler {
 
         while ((inputLine = in.readLine()) != null) {
             response.append(inputLine);
+            response.append("/n");
         }
         in.close();
 
