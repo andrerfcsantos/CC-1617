@@ -13,16 +13,11 @@ public class WebServer {
             host = args[0];
         }
 
-
         System.out.println("[WebServer] A iniciar Web Server com host " + host +" ...");
 
         System.out.println("[WebServer] A iniciar MonitorUDPServer..");
         new MonitorUDPServer(host).start();
         System.out.println("[WebServer] MonitorUDPServer iniciado.");
-
-        System.out.println("[WebServer] A iniciar TCPMain..");
-        new TCPMain().start();
-        System.out.println("[WebServer] TCPMain iniciado.");
 
         System.out.println("[WebServer] WebServer iniciado.");
     }
