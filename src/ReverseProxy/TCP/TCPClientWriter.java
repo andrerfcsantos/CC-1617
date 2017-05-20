@@ -17,26 +17,21 @@ public class TCPClientWriter extends Thread{
 
     @Override
     public void run() {
-        //byte buffer[] = new byte[READ_SIZE];
-        //int bLidos;
+        byte buffer[] = new byte[READ_SIZE];
+        int bLidos;
 
-        String str_resposta;
         try {
             OutputStream streamEscrita = sockCliente.getOutputStream();
             InputStream streamLeitura= sockWebServer.getInputStream();
 
-            PrintWriter writer = new PrintWriter(streamEscrita);
-            BufferedReader reader = new BufferedReader(new InputStreamReader(streamLeitura));
-
-            while ((str_resposta = reader.readLine()) != null){
-                System.out.println("[TCPClientWriter] Resposta lido: " + str_resposta);
-                writer.println(str_resposta);
+            while ((bLidos = streamLeitura.read(buffer,0,READ_SIZE)) != -1) {
+                System.out.println("[TCPClientWriter] Resposta de  " + bLidos  + "bytes lida." );
+                streamEscrita.write(buffer,0,bLidos);
                 System.out.println("[TCPClientWriter] Resposta enviada para cliente.");
-                writer.flush();
+                streamEscrita.flush();
             }
 
             sockCliente.shutdownOutput();
-
             sockCliente.close();
             sockWebServer.close();
 

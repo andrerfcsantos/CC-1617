@@ -21,21 +21,19 @@ public class TCPClientListener extends Thread {
 
     @Override
     public void run() {
-        //byte buffer[] = new byte[READ_SIZE];
-        //int bLidos;
+        byte buffer[] = new byte[READ_SIZE];
+        int bLidos;
         String str_pedido;
         try {
             OutputStream streamEscrita = sockWebServer.getOutputStream();
             InputStream streamLeitura= sockCliente.getInputStream();
 
-            PrintWriter writer = new PrintWriter(streamEscrita);
-            BufferedReader reader = new BufferedReader(new InputStreamReader(streamLeitura));
 
-            while ((str_pedido = reader.readLine()) != null){
-                System.out.println("[TCPClientListener] Pedido lido: " + str_pedido);
-                writer.println(str_pedido);
+            while ((bLidos = streamLeitura.read(buffer,0,READ_SIZE)) != -1){
+                System.out.println("[TCPClientListener] Lido pedido de " + bLidos + " bytes." );
+                streamEscrita.write(buffer,0,bLidos);
                 System.out.println("[TCPClientListener] Pedido enviado para WebServer.");
-                writer.flush();
+                streamEscrita.flush();
             }
 
             entradaTabela.lock();
