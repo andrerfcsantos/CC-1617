@@ -31,11 +31,12 @@ public class TCPMain extends Thread {
         try {
             Socket sockCliente;
             ss = new ServerSocket(80);
-            PrintWriter choiceLog =new PrintWriter(
-                             new FileOutputStream(
-                            new File("server-choice-log.txt"),true
-                    ));
+
             while(true){
+                PrintWriter choiceLog =new PrintWriter(
+                        new FileOutputStream(
+                                new File("server-choice-log.txt"),true
+                        ));
                 DecimalFormat df = new DecimalFormat("#.#####");
                 df.setRoundingMode(RoundingMode.CEILING);
                 sockCliente = ss.accept();
@@ -69,7 +70,7 @@ public class TCPMain extends Thread {
                                                     "rtt: " + df.format(p_rtt) + " (" + rtt.toMillis() + " ms), "+
                                                     "perdas: " + df.format(p_perdas) + " (" + perdas + "), " +
                                                     "con: " + df.format(p_nConexoes) +  " (" + nConexoes + ")" );
-                    choiceLog.close();
+                    choiceLog.flush();
 
                     if(pontuacao < melhorPontuacao) {
                         ipMelhorWebServer = ip;
@@ -89,6 +90,7 @@ public class TCPMain extends Thread {
 
                 new TCPClientListener(sockCliente,sockWebServer).start();
                 new TCPClientWriter(melhorEntrada,sockCliente,sockWebServer).start();
+                choiceLog.close();
             }
 
 
