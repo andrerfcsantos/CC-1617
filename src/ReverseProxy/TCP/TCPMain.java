@@ -46,6 +46,8 @@ public class TCPMain extends Thread {
                 MonitorTableEntry melhorEntrada = null;
                 double melhorPontuacao = Double.MAX_VALUE;
 
+
+                choiceLog.println("=== NOVO PEDIDO ===");
                 for(Map.Entry<InetAddress,MonitorTableEntry> entrada: tabelaMonitorizacao.tabela.entrySet()){
                     double pontuacao=0;
                     double p_ld, p_rtt,p_perdas,p_nConexoes;
@@ -58,13 +60,13 @@ public class TCPMain extends Thread {
                     int perdas = entradaTabela.getPackagesLost(10).getPkgCount();
                     int nConexoes = entradaTabela.getnConexoes();
 
-                    p_ld = (double) 0.20*lastDisp.toMillis()/ 3000.0;
-                    p_rtt = (double) 0.20*rtt.toMillis()/150.0;
+                    p_ld = (double) 0.20*lastDisp.toMillis()/ 40000.0;
+                    p_rtt = (double) 0.20*rtt.toMillis()/600.0;
                     p_perdas = (double) 0.30*perdas/5.0;
                     p_nConexoes = (double) 0.30*nConexoes/3.0;
 
                     pontuacao = p_ld + p_rtt + p_perdas + p_nConexoes;
-                    choiceLog.println("=== NOVO PEDIDO ===");
+
                     choiceLog.println("Pontuacao para " + ip + " = " +  df.format(pontuacao) + " "+
                                                     "disp: " + df.format(p_ld)  + " (" + lastDisp.toMillis() + " ms), "+
                                                     "rtt: " + df.format(p_rtt) + " (" + rtt.toMillis() + " ms), "+
