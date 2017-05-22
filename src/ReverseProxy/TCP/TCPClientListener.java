@@ -1,6 +1,5 @@
 package ReverseProxy.TCP;
 
-import ReverseProxy.MonitorUDP.MonitorTableEntry;
 
 import java.io.*;
 import java.net.Socket;
@@ -40,6 +39,7 @@ public class TCPClientListener extends Thread {
 
         } catch (IOException e) {
             System.err.println("[TCPClientListener] Erro a abrir input stream");
+            System.err.println(e.getMessage());
         }
 
 

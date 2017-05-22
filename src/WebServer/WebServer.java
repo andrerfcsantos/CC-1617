@@ -2,8 +2,6 @@ package WebServer;
 
 import WebServer.MonitorUDP.MonitorUDPServer;
 
-import java.net.InetAddress;
-import java.net.UnknownHostException;
 
 public class WebServer {
     public static void main(String[] args) {
