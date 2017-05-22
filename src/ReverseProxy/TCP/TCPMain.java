@@ -73,8 +73,8 @@ public class TCPMain extends Thread {
                 melhorEntrada.incNConexoes();
                 melhorEntrada.unlock();
 
-                new TCPClientListener(melhorEntrada,sockCliente,sockWebServer).start();
-                new TCPClientWriter(sockCliente,sockWebServer).start();
+                new TCPClientListener(sockCliente,sockWebServer).start();
+                new TCPClientWriter(melhorEntrada,sockCliente,sockWebServer).start();
             }
 
 

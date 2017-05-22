@@ -40,7 +40,7 @@ public class ProxyReceiver extends Thread{
                 b_in = new ByteArrayInputStream(buf_in,0,pacote_in.getLength());
                 o_in = new ObjectInputStream(b_in);
                 pdu_pedido = (PDU) o_in.readObject();
-                System.out.println("[ProxyReceiver] Pedido recebido: " + pdu_pedido.toString());
+                System.out.println("[ProxyReceiver] Resposta recebida: " + pdu_pedido.toString());
 
                 switch (pdu_pedido.getTipo()){
                     case DISPONIVEL:
