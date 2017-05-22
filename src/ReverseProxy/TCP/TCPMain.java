@@ -59,7 +59,7 @@ public class TCPMain extends Thread {
 
                     PrintWriter choiceLog =new PrintWriter(
                                             new FileOutputStream(
-                                                    new File("~/logs/server-choice-log.txt"),true
+                                                    new File("server-choice-log.txt"),true
                                              ));
                     choiceLog.println("[TCPMain] Pontuacao para " + ip + " = " +  pontuacao +
                                                     "disp:" + p_ld  + " (" + lastDisp.toMillis() + "ms), "+
