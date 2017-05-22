@@ -15,11 +15,7 @@ public class WebServer {
             host = args[0];
         }
 
-        try {
-            System.out.println("[WebServer] A iniciar Web Server com ip " + InetAddress.getLocalHost() + " ligado ao RP " + host + " ...");
-        } catch (UnknownHostException e) {
-            System.err.println("Nao foi possivel obter endereço local.");
-        }
+        System.out.println("[WebServer] A iniciar Web Server ligado ao RP " + host + " ...");
 
         System.out.println("[WebServer] A iniciar MonitorUDPServer..");
         new MonitorUDPServer(host).start();

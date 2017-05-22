@@ -55,7 +55,10 @@ public class TCPMain extends Thread {
                     pontuacao = p_ld + p_rtt + p_perdas + p_nConexoes;
 
                     System.out.println("[TCPMain] Pontuacao para " + ip + " = " +  pontuacao +
-                                        "( " + p_ld  + " , " + p_rtt  + " , " + p_perdas + " , " + p_nConexoes +  ")" );
+                                                    "disp:" + p_ld  + " (" + lastDisp.toMillis() + "ms), "+
+                                                    "rtt: " + p_rtt + " (" + rtt.toMillis() + "ms), "+
+                                                    "perdas: " + p_perdas + " (" + perdas + "), " +
+                                                    "con: " + p_nConexoes +  " ( " + nConexoes + ")" );
 
                     if(pontuacao < melhorPontuacao) {
                         ipMelhorWebServer = ip;
