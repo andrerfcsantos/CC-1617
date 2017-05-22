@@ -3,7 +3,10 @@ package ReverseProxy.TCP;
 import ReverseProxy.MonitorUDP.MonitorTable;
 import ReverseProxy.MonitorUDP.MonitorTableEntry;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -54,11 +57,16 @@ public class TCPMain extends Thread {
 
                     pontuacao = p_ld + p_rtt + p_perdas + p_nConexoes;
 
-                    System.out.println("[TCPMain] Pontuacao para " + ip + " = " +  pontuacao +
+                    PrintWriter choiceLog =new PrintWriter(
+                                            new FileOutputStream(
+                                                    new File("persons.txt"),true
+                                             ));
+                    choiceLog.println("[TCPMain] Pontuacao para " + ip + " = " +  pontuacao +
                                                     "disp:" + p_ld  + " (" + lastDisp.toMillis() + "ms), "+
                                                     "rtt: " + p_rtt + " (" + rtt.toMillis() + "ms), "+
                                                     "perdas: " + p_perdas + " (" + perdas + "), " +
                                                     "con: " + p_nConexoes +  " ( " + nConexoes + ")" );
+                    choiceLog.close();
 
                     if(pontuacao < melhorPontuacao) {
                         ipMelhorWebServer = ip;
