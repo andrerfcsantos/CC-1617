@@ -91,7 +91,7 @@ public class ProbeRequester extends Thread {
 
                 tabelaMonitorizacao.lock();
                 timeSinceLastAvailable = Duration.between(entradaTabela.getLastAvailable(), Instant.now());
-                if(timeSinceLastAvailable.getSeconds() > 120){
+                if(timeSinceLastAvailable.getSeconds() > 30){
                     System.out.println("[ProbeRequester] A terminar ligação a " + hostAddress + " por inactividade.");
                     exit=true;
                     tabelaMonitorizacao.deleteEntry(hostAddress);

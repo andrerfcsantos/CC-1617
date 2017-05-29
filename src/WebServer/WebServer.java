@@ -2,6 +2,7 @@ package WebServer;
 
 import WebServer.MonitorUDP.MonitorUDPServer;
 
+
 public class WebServer {
     public static void main(String[] args) {
         String host;
@@ -12,7 +13,7 @@ public class WebServer {
             host = args[0];
         }
 
-        System.out.println("[WebServer] A iniciar Web Server com host " + host +" ...");
+        System.out.println("[WebServer] A iniciar Web Server ligado ao RP " + host + " ...");
 
         System.out.println("[WebServer] A iniciar MonitorUDPServer..");
         new MonitorUDPServer(host).start();
